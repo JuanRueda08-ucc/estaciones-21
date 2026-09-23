@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100">
+  <rect width="900" height="1100" fill="#f0d4ce"/>
+  <circle cx="170" cy="170" r="230" fill="#e8b5b0" opacity=".7"/>
+  <circle cx="760" cy="850" r="310" fill="#f7e4da" opacity=".72"/>
+  <g fill="none" stroke="#9e5f68" stroke-linecap="round" stroke-width="7" opacity=".9">
+    <path d="M450 980c10-260 34-460 3-670"/>
+    <path d="M458 660c-106-44-176-116-214-228"/>
+    <path d="M454 560c90-54 148-120 173-234"/>
+    <path d="M452 450c-54-52-82-107-88-183"/>
+  </g>
+  <g fill="#9e5f68">
+    <circle cx="240" cy="420" r="54"/><circle cx="628" cy="315" r="58"/><circle cx="365" cy="270" r="39"/>
+  </g>
+  <g fill="#f8eee5" opacity=".8">
+    <circle cx="218" cy="395" r="16"/><circle cx="264" cy="411" r="16"/><circle cx="624" cy="286" r="17"/><circle cx="656" cy="328" r="17"/><circle cx="352" cy="254" r="12"/>
+  </g>
+  <rect x="42" y="1005" width="816" height="1" fill="#9e5f68" opacity=".45"/>
+  <text x="42" y="1047" fill="#5f3f47" font-family="Arial, sans-serif" font-size="24" letter-spacing="5">IMAGEN PROVISIONAL · PRIMAVERA</text>
+</svg>

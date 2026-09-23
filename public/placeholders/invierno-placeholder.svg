@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100">
+  <rect width="900" height="1100" fill="#cddbe0"/>
+  <circle cx="190" cy="215" r="180" fill="#eff5f4" opacity=".8"/>
+  <circle cx="750" cy="760" r="300" fill="#9bb6c0" opacity=".6"/>
+  <path d="M0 838c192-133 338-142 502-63 119 57 229 49 398-69v394H0Z" fill="#66828e" opacity=".76"/>
+  <g fill="none" stroke="#f2f6f3" stroke-linecap="round" stroke-width="7" opacity=".86">
+    <path d="M170 270v500M170 430l-111-94M170 509l116-110M170 610l-88-84M170 678l122-91"/>
+    <path d="M625 205v362M625 318l-83-72M625 380l91-84M625 460l-69-61"/>
+  </g>
+  <g fill="#f2f6f3" opacity=".82"><circle cx="170" cy="270" r="13"/><circle cx="625" cy="205" r="12"/><circle cx="760" cy="560" r="8"/><circle cx="360" cy="340" r="7"/></g>
+  <rect x="42" y="1005" width="816" height="1" fill="#49636e" opacity=".45"/>
+  <text x="42" y="1047" fill="#3e5a65" font-family="Arial, sans-serif" font-size="24" letter-spacing="5">IMAGEN PROVISIONAL · INVIERNO</text>
+</svg>

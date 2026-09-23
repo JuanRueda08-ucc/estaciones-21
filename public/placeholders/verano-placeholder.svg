@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100">
+  <rect width="900" height="1100" fill="#eed29f"/>
+  <circle cx="690" cy="235" r="174" fill="#d99858" opacity=".9"/>
+  <circle cx="690" cy="235" r="119" fill="#f3e2b9" opacity=".8"/>
+  <path d="M0 700c160-94 262-110 426-23s294 115 474 4v419H0Z" fill="#c9884f" opacity=".83"/>
+  <path d="M0 820c216-92 359-48 485 5 157 67 260 45 415-15v290H0Z" fill="#e4b56f" opacity=".9"/>
+  <g fill="none" stroke="#6e4e35" stroke-linecap="round" stroke-width="7" opacity=".72">
+    <path d="M160 760c20-190 19-310-10-438"/><path d="M151 494c-70-47-113-106-128-177"/><path d="M158 542c79-45 125-101 151-177"/>
+  </g>
+  <g fill="#6e4e35" opacity=".7"><path d="M27 312c52 18 86 44 104 83-53-4-87-29-104-83Z"/><path d="M308 345c-45 22-74 55-86 96 52-10 80-42 86-96Z"/></g>
+  <rect x="42" y="1005" width="816" height="1" fill="#6e4e35" opacity=".45"/>
+  <text x="42" y="1047" fill="#65482f" font-family="Arial, sans-serif" font-size="24" letter-spacing="5">IMAGEN PROVISIONAL · VERANO</text>
+</svg>
