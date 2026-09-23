@@ -1,10 +1,10 @@
 "use client";
 
 import { ArrowLeft, ImageOff } from "lucide-react";
-import type { Station } from "@/data/estaciones";
-import { SeasonIcon } from "@/components/experience/SeasonIcon";
+import type { Station } from "@/data/seasons";
+import { SeasonIcon } from "@/components/SeasonIcon";
 
-export function StationReveal({ station, onBack }: { station: Station; onBack: () => void }) {
+export function SeasonReveal({ station, onBack }: { station: Station; onBack: () => void }) {
   return (
     <article className="overflow-hidden rounded-[1.8rem] border border-[var(--line)] bg-white/45 shadow-[0_24px_80px_rgba(61,45,41,0.10)] animate-entrance" style={{ backgroundColor: `${station.colors.wash}cc` }} aria-labelledby={`reveal-${station.key}`}>
       <div className="grid lg:grid-cols-[0.92fr_1.08fr]">

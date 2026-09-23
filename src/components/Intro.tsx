@@ -1,10 +1,10 @@
 "use client";
 
 import { ArrowDown, ArrowUpRight, Sparkles } from "lucide-react";
-import { stations } from "@/data/estaciones";
-import { SeasonIcon } from "@/components/experience/SeasonIcon";
+import { stations } from "@/data/seasons";
+import { SeasonIcon } from "@/components/SeasonIcon";
 
-export function Cover({ onStart }: { onStart: () => void }) {
+export function Intro({ onStart }: { onStart: () => void }) {
   return (
     <section className="relative flex min-h-[min(820px,100svh)] items-center overflow-hidden px-5 py-10 sm:px-8 lg:px-14" aria-labelledby="cover-title">
       <div className="mx-auto grid w-full max-w-[1180px] items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(350px,0.76fr)] lg:gap-20">

@@ -1,10 +1,10 @@
 "use client";
 
 import { Check, LockKeyhole } from "lucide-react";
-import type { Station } from "@/data/estaciones";
-import { SeasonIcon } from "@/components/experience/SeasonIcon";
+import type { Station } from "@/data/seasons";
+import { SeasonIcon } from "@/components/SeasonIcon";
 
-export function StationCard({ station, index, state, onOpen }: { station: Station; index: number; state: "locked" | "available" | "opened"; onOpen: () => void }) {
+export function SeasonCard({ station, index, state, onOpen }: { station: Station; index: number; state: "locked" | "available" | "opened"; onOpen: () => void }) {
   const isLocked = state === "locked";
   const isOpened = state === "opened";
 

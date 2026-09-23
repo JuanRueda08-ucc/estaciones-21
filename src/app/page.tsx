@@ -1,4 +1,4 @@
-import { SeasonExperience } from "@/components/experience/SeasonExperience";
+import { SeasonExperience } from "@/components/SeasonExperience";
 
 export default function Home() {
   return <SeasonExperience />;

@@ -1,65 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import { RotateCcw } from "lucide-react";
-import { Cover } from "@/components/experience/Cover";
-import { FinalLetter } from "@/components/experience/FinalLetter";
-import { StationCard } from "@/components/experience/StationCard";
-import { StationReveal } from "@/components/experience/StationReveal";
-import { stations } from "@/data/estaciones";
-
-const PROGRESS_KEY = "cuatro-estaciones-progress";
-const STARTED_KEY = "cuatro-estaciones-started";
+import { Intro } from "@/components/Intro";
+import { FinalLetter } from "@/components/FinalLetter";
+import { SeasonCard } from "@/components/SeasonCard";
+import { SpringReveal } from "@/components/SpringReveal";
+import { SeasonReveal } from "@/components/SeasonReveal";
+import { stations } from "@/data/seasons";
+import { useGiftProgress } from "@/hooks/useGiftProgress";
 
 export function SeasonExperience() {
-  const [started, setStarted] = useState(false);
-  const [openedCount, setOpenedCount] = useState(0);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    const savedCount = Number.parseInt(window.localStorage.getItem(PROGRESS_KEY) ?? "0", 10);
-    const safeCount = Number.isFinite(savedCount) ? Math.min(Math.max(savedCount, 0), stations.length) : 0;
-    setOpenedCount(safeCount);
-    setStarted(window.localStorage.getItem(STARTED_KEY) === "true" || safeCount > 0);
-    setIsReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isReady) return;
-    window.localStorage.setItem(PROGRESS_KEY, String(openedCount));
-    window.localStorage.setItem(STARTED_KEY, String(started));
-  }, [isReady, openedCount, started]);
-
-  const selectedStation = useMemo(() => (selectedIndex === null ? null : stations[selectedIndex]), [selectedIndex]);
-
-  function startExperience() {
-    setStarted(true);
-    window.setTimeout(() => document.getElementById("journey")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
-  }
-
-  function openStation(index: number) {
-    if (index > openedCount) return;
-    if (index === openedCount && openedCount < stations.length) {
-      const nextCount = openedCount + 1;
-      setOpenedCount(nextCount);
-    }
-    setSelectedIndex(index);
-    window.setTimeout(() => document.getElementById("reveal")?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
-  }
-
-  function resetExperience() {
-    window.localStorage.removeItem(PROGRESS_KEY);
-    window.localStorage.removeItem(STARTED_KEY);
-    setOpenedCount(0);
-    setSelectedIndex(null);
-    setStarted(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  const { started, openedCount, selectedStation, startExperience, openStation, clearSelection, resetExperience } = useGiftProgress();
 
   return (
     <main className="paper-grain overflow-x-hidden">
-      {!started ? <Cover onStart={startExperience} /> : null}
+      {!started ? <Intro onStart={startExperience} /> : null}
 
       {started ? (
         <>
@@ -87,14 +42,14 @@ export function SeasonExperience() {
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 {stations.map((station, index) => {
                   const state = index < openedCount ? "opened" : index === openedCount ? "available" : "locked";
-                  return <StationCard key={station.key} station={station} index={index} state={state} onOpen={() => openStation(index)} />;
+                  return <SeasonCard key={station.key} station={station} index={index} state={state} onOpen={() => openStation(index)} />;
                 })}
               </div>
             </div>
 
             <div id="reveal" className="mt-12 scroll-mt-6 sm:mt-16">
-              {selectedStation ? (
-                <StationReveal station={selectedStation} onBack={() => setSelectedIndex(null)} />
+              {selectedStation && selectedStation.key !== "spring" ? (
+                <SeasonReveal station={selectedStation} onBack={() => clearSelection()} />
               ) : (
                 <div className="flex min-h-[180px] items-center justify-between gap-8 rounded-[1.7rem] border border-dashed border-[var(--line)] px-6 py-7 sm:px-9">
                   <div>
@@ -116,6 +71,8 @@ export function SeasonExperience() {
           </section>
         </>
       ) : null}
+
+      {selectedStation?.key === "spring" ? <SpringReveal station={selectedStation} onBack={clearSelection} /> : null}
 
       <footer className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-5 pb-8 pt-2 text-[0.62rem] font-bold uppercase tracking-[0.15em] text-[var(--muted)] sm:px-8 lg:px-14">
         <span>una carta interactiva</span>

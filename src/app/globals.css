@@ -151,6 +151,23 @@ a:focus-visible {
   }
 }
 
+.petal {
+  transform-origin: 0 0;
+  transform: rotate(var(--r)) scale(1);
+  animation: petal-open 900ms var(--ease-out) both;
+}
+
+@keyframes petal-open {
+  from {
+    opacity: 0;
+    transform: rotate(calc(var(--r) - 50deg)) scale(0.15);
+  }
+  to {
+    opacity: 0.85;
+    transform: rotate(var(--r)) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

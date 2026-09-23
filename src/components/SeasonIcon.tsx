@@ -1,5 +1,5 @@
 import { Flower2, Leaf, Snowflake, SunMedium } from "lucide-react";
-import type { SeasonKey } from "@/data/estaciones";
+import type { SeasonKey } from "@/data/seasons";
 
 const icons = {
   spring: Flower2,
