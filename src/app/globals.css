@@ -168,6 +168,37 @@ a:focus-visible {
   }
 }
 
+.sun-glow {
+  background: radial-gradient(circle, rgba(224, 164, 88, 0.55), rgba(224, 164, 88, 0) 70%);
+  animation: glow-in 1100ms var(--ease-out) both;
+}
+
+.summer-wash {
+  z-index: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(232, 176, 96, 0.28), transparent 60%);
+  animation: wash-in 1200ms var(--ease-out) both;
+}
+
+@keyframes glow-in {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.9);
+  }
+}
+
+@keyframes wash-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
