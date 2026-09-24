@@ -5,11 +5,13 @@ import { stations } from "@/data/seasons";
 
 const PROGRESS_KEY = "cuatro-estaciones-progress";
 const STARTED_KEY = "cuatro-estaciones-started";
+const ACCESS_KEY = "cuatro-estaciones-access";
 
 export function useGiftProgress() {
   const [started, setStarted] = useState(false);
   const [openedCount, setOpenedCount] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [unlocked, setUnlocked] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -17,6 +19,11 @@ export function useGiftProgress() {
     const safeCount = Number.isFinite(savedCount) ? Math.min(Math.max(savedCount, 0), stations.length) : 0;
     setOpenedCount(safeCount);
     setStarted(window.localStorage.getItem(STARTED_KEY) === "true" || safeCount > 0);
+    try {
+      setUnlocked(window.sessionStorage.getItem(ACCESS_KEY) === "granted");
+    } catch {
+      setUnlocked(false);
+    }
     setIsReady(true);
   }, []);
 
@@ -31,6 +38,13 @@ export function useGiftProgress() {
   function startExperience() {
     setStarted(true);
     window.setTimeout(() => document.getElementById("journey")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+  }
+
+  function unlock() {
+    try {
+      window.sessionStorage.setItem(ACCESS_KEY, "granted");
+    } catch {}
+    setUnlocked(true);
   }
 
   function openStation(index: number) {
@@ -53,5 +67,5 @@ export function useGiftProgress() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  return { started, openedCount, selectedStation, startExperience, openStation, clearSelection, resetExperience };
+  return { unlocked, unlock, started, openedCount, selectedStation, startExperience, openStation, clearSelection, resetExperience };
 }

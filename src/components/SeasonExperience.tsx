@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { RotateCcw } from "lucide-react";
+import { AccessGate } from "@/components/AccessGate";
 import { Intro } from "@/components/Intro";
 import { FinalLetter } from "@/components/FinalLetter";
 import { SeasonCard } from "@/components/SeasonCard";
@@ -12,13 +14,28 @@ import { stations } from "@/data/seasons";
 import { useGiftProgress } from "@/hooks/useGiftProgress";
 
 export function SeasonExperience() {
-  const { started, openedCount, selectedStation, startExperience, openStation, clearSelection, resetExperience } = useGiftProgress();
+  const { unlocked, unlock, started, openedCount, selectedStation, startExperience, openStation, clearSelection, resetExperience } = useGiftProgress();
+
+  const [gateOpen, setGateOpen] = useState(false);
+  const showJourney = started && unlocked;
+
+  function handleStart() {
+    if (unlocked) startExperience();
+    else setGateOpen(true);
+  }
+
+  function handleAccess() {
+    unlock();
+    setGateOpen(false);
+    startExperience();
+  }
 
   return (
     <main className="paper-grain overflow-x-hidden">
-      {!started ? <Intro onStart={startExperience} /> : null}
+      {!showJourney && !gateOpen ? <Intro onStart={handleStart} /> : null}
+      {!showJourney && gateOpen ? <AccessGate onBack={() => setGateOpen(false)} onSuccess={handleAccess} /> : null}
 
-      {started ? (
+      {showJourney ? (
         <>
           <header className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-5 pb-5 pt-7 sm:px-8 lg:px-14 lg:pt-10">
             <a className="serif text-xl italic text-[var(--ink)]" href="#journey" aria-label="Volver al inicio de la experiencia">para ti</a>
