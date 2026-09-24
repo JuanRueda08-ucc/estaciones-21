@@ -5,7 +5,7 @@ Experiencia web interactiva en **Next.js + App Router + TypeScript + Tailwind CS
 ## Estructura
 
 - `src/app/`: layout, página y estilos globales.
-- `src/components/`: `Intro`, `SeasonCard`, `SeasonReveal`, `FinalLetter`, `SeasonExperience`, `SeasonIcon`.
+- `src/components/`: `Intro`, `SeasonCard`, `SpringReveal`, `SummerReveal`, `AutumnReveal`, `WinterReveal`, `FinalLetter`, `SeasonExperience`, `SeasonIcon`.
 - `src/data/seasons.ts`: contenido de las estaciones.
 - `src/hooks/useGiftProgress.ts`: inicio, progreso, selección, desbloqueo y reinicio.
 - `public/placeholders/`: SVG provisionales; `public/gifts/` reservada para las fotos reales.
