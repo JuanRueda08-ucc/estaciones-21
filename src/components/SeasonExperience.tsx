@@ -6,6 +6,7 @@ import { FinalLetter } from "@/components/FinalLetter";
 import { SeasonCard } from "@/components/SeasonCard";
 import { SpringReveal } from "@/components/SpringReveal";
 import { SummerReveal } from "@/components/SummerReveal";
+import { AutumnReveal } from "@/components/AutumnReveal";
 import { SeasonReveal } from "@/components/SeasonReveal";
 import { stations } from "@/data/seasons";
 import { useGiftProgress } from "@/hooks/useGiftProgress";
@@ -49,7 +50,7 @@ export function SeasonExperience() {
             </div>
 
             <div id="reveal" className="mt-12 scroll-mt-6 sm:mt-16">
-              {selectedStation && selectedStation.key !== "spring" && selectedStation.key !== "summer" ? (
+              {selectedStation && selectedStation.key !== "spring" && selectedStation.key !== "summer" && selectedStation.key !== "autumn" ? (
                 <SeasonReveal station={selectedStation} onBack={() => clearSelection()} />
               ) : (
                 <div className="flex min-h-[180px] items-center justify-between gap-8 rounded-[1.7rem] border border-dashed border-[var(--line)] px-6 py-7 sm:px-9">
@@ -75,6 +76,7 @@ export function SeasonExperience() {
 
       {selectedStation?.key === "spring" ? <SpringReveal station={selectedStation} onBack={clearSelection} /> : null}
       {selectedStation?.key === "summer" ? <SummerReveal station={selectedStation} onBack={clearSelection} /> : null}
+      {selectedStation?.key === "autumn" ? <AutumnReveal station={selectedStation} onBack={clearSelection} /> : null}
 
       <footer className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-5 pb-8 pt-2 text-[0.62rem] font-bold uppercase tracking-[0.15em] text-[var(--muted)] sm:px-8 lg:px-14">
         <span>una carta interactiva</span>
