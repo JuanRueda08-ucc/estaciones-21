@@ -229,6 +229,34 @@ a:focus-visible {
   animation: entrance 700ms 600ms var(--ease-out) both;
 }
 
+.frost-clear {
+  background: linear-gradient(180deg, rgba(217, 226, 230, 0.92), rgba(196, 211, 218, 0.85));
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  animation: frost-clear 1500ms 150ms var(--ease-smooth) both;
+}
+
+@keyframes frost-clear {
+  from {
+    opacity: 1;
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+  to {
+    opacity: 0;
+    -webkit-backdrop-filter: blur(0);
+    backdrop-filter: blur(0);
+  }
+}
+
+.winter-content {
+  animation: entrance 700ms 500ms var(--ease-out) both;
+}
+
+.winter-content-2 {
+  animation: entrance 700ms 650ms var(--ease-out) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

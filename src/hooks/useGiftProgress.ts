@@ -40,8 +40,6 @@ export function useGiftProgress() {
       setOpenedCount(nextCount);
     }
     setSelectedIndex(index);
-    if (stations[index].key !== "winter") return;
-    window.setTimeout(() => document.getElementById("reveal")?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   }
 
   const clearSelection = useCallback(() => setSelectedIndex(null), []);
