@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { AccessGate } from "@/components/AccessGate";
 import { Intro } from "@/components/Intro";
@@ -13,30 +13,87 @@ import { WinterReveal } from "@/components/WinterReveal";
 import { stations } from "@/data/seasons";
 import { useGiftProgress } from "@/hooks/useGiftProgress";
 
+const LEAVE_MS = 200;
+
+type ChangeOptions = { focusId?: string; toTop?: boolean };
+
 export function SeasonExperience() {
   const { unlocked, unlock, started, openedCount, selectedStation, startExperience, openStation, clearSelection, resetExperience } = useGiftProgress();
 
   const [gateOpen, setGateOpen] = useState(false);
+  const [leaving, setLeaving] = useState(false);
+  const [enterCount, setEnterCount] = useState(0);
+  const busy = useRef(false);
+  const timer = useRef<number | undefined>(undefined);
+  const pendingFocus = useRef<string | undefined>(undefined);
   const showJourney = started && unlocked;
+  const screen = showJourney ? "journey" : gateOpen ? "gate" : "intro";
+
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  // Runs the current view's exit animation, then swaps the view. Ignores calls while a change is in flight.
+  const change = useCallback((swap: () => void, { focusId, toTop }: ChangeOptions = {}) => {
+    if (busy.current) return;
+    busy.current = true;
+    const finish = () => {
+      swap();
+      if (toTop) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      pendingFocus.current = focusId;
+      setEnterCount((count) => count + 1);
+      setLeaving(false);
+      busy.current = false;
+    };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      finish();
+      return;
+    }
+    setLeaving(true);
+    timer.current = window.setTimeout(finish, LEAVE_MS);
+  }, []);
+
+  // After a view change, move focus to a sensible element of the new view.
+  useEffect(() => {
+    const id = pendingFocus.current;
+    pendingFocus.current = undefined;
+    if (!id) return;
+    const element = document.getElementById(id);
+    if (!element) return;
+    if (!element.matches("button, a, input")) element.setAttribute("tabindex", "-1");
+    element.focus({ preventScroll: true });
+  }, [enterCount]);
+
+  const selectedKey = selectedStation?.key;
+  const closeStation = useCallback(() => {
+    change(clearSelection, { focusId: selectedKey ? `season-card-${selectedKey}` : undefined });
+  }, [change, clearSelection, selectedKey]);
 
   function handleStart() {
-    if (unlocked) startExperience();
-    else setGateOpen(true);
+    if (unlocked) change(startExperience, { focusId: "journey-title", toTop: true });
+    else change(() => setGateOpen(true), { focusId: "gate-title", toTop: true });
   }
 
   function handleAccess() {
-    unlock();
-    setGateOpen(false);
-    startExperience();
+    change(
+      () => {
+        unlock();
+        setGateOpen(false);
+        startExperience();
+      },
+      { focusId: "journey-title", toTop: true },
+    );
   }
+
+  const screenLeaving = leaving && !selectedStation;
+  const journeyClass = selectedStation ? "screen-hidden" : screenLeaving ? "screen-leave" : enterCount > 0 ? "screen-enter" : "";
+  const gateLeaving = screenLeaving && screen !== "journey" ? "screen-leave" : "";
 
   return (
     <main className="paper-grain overflow-x-hidden">
-      {!showJourney && !gateOpen ? <Intro onStart={handleStart} /> : null}
-      {!showJourney && gateOpen ? <AccessGate onBack={() => setGateOpen(false)} onSuccess={handleAccess} /> : null}
+      {screen === "intro" ? <div key={`intro-${enterCount}`} className={gateLeaving} inert={screenLeaving}><Intro onStart={handleStart} /></div> : null}
+      {screen === "gate" ? <div key={`gate-${enterCount}`} className={gateLeaving} inert={screenLeaving}><AccessGate onBack={() => change(() => setGateOpen(false), { focusId: "cover-title", toTop: true })} onSuccess={handleAccess} /></div> : null}
 
       {showJourney ? (
-        <>
+        <div key={`journey-${enterCount}`} className={journeyClass} inert={screenLeaving}>
           <header className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-5 pb-5 pt-7 sm:px-8 lg:px-14 lg:pt-10">
             <a className="serif text-xl italic text-[var(--ink)]" href="#journey" aria-label="Volver al inicio de la experiencia">para ti</a>
             <div className="flex items-center gap-4">
@@ -61,7 +118,7 @@ export function SeasonExperience() {
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 {stations.map((station, index) => {
                   const state = index < openedCount ? "opened" : index === openedCount ? "available" : "locked";
-                  return <SeasonCard key={station.key} station={station} index={index} state={state} onOpen={() => openStation(index)} />;
+                  return <SeasonCard key={station.key} station={station} index={index} state={state} onOpen={() => change(() => openStation(index))} />;
                 })}
               </div>
             </div>
@@ -79,18 +136,22 @@ export function SeasonExperience() {
             {openedCount === stations.length ? <div className="mt-10"><FinalLetter /></div> : null}
 
             <div className="mt-12 flex justify-end border-t border-[var(--line)] pt-5">
-              <button className="flex items-center gap-2 text-[0.65rem] font-bold uppercase tracking-[0.13em] text-[var(--muted)] transition-colors hover:text-[var(--ink)]" type="button" onClick={resetExperience}>
+              <button className="flex items-center gap-2 text-[0.65rem] font-bold uppercase tracking-[0.13em] text-[var(--muted)] transition-colors hover:text-[var(--ink)]" type="button" onClick={() => change(resetExperience, { focusId: "cover-title", toTop: true })}>
                 <RotateCcw aria-hidden="true" size={13} /> reiniciar experiencia
               </button>
             </div>
           </section>
-        </>
+        </div>
       ) : null}
 
-      {selectedStation?.key === "spring" ? <SpringReveal station={selectedStation} onBack={clearSelection} /> : null}
-      {selectedStation?.key === "summer" ? <SummerReveal station={selectedStation} onBack={clearSelection} /> : null}
-      {selectedStation?.key === "autumn" ? <AutumnReveal station={selectedStation} onBack={clearSelection} /> : null}
-      {selectedStation?.key === "winter" ? <WinterReveal station={selectedStation} onBack={clearSelection} /> : null}
+      {selectedStation ? (
+        <div className={leaving ? "overlay-leave" : "overlay-enter"}>
+          {selectedStation.key === "spring" ? <SpringReveal station={selectedStation} onBack={closeStation} /> : null}
+          {selectedStation.key === "summer" ? <SummerReveal station={selectedStation} onBack={closeStation} /> : null}
+          {selectedStation.key === "autumn" ? <AutumnReveal station={selectedStation} onBack={closeStation} /> : null}
+          {selectedStation.key === "winter" ? <WinterReveal station={selectedStation} onBack={closeStation} /> : null}
+        </div>
+      ) : null}
 
       <footer className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-5 pb-8 pt-2 text-[0.62rem] font-bold uppercase tracking-[0.15em] text-[var(--muted)] sm:px-8 lg:px-14">
         <span>una carta interactiva</span>

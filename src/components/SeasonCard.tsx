@@ -10,6 +10,7 @@ export function SeasonCard({ station, index, state, onOpen }: { station: Station
 
   return (
     <button
+      id={`season-card-${station.key}`}
       className={`group relative flex min-h-[154px] w-full flex-col justify-between overflow-hidden rounded-[1.35rem] border p-5 text-left transition-all duration-300 sm:min-h-[176px] sm:p-6 ${isLocked ? "cursor-not-allowed border-[rgba(45,36,48,0.08)] bg-[rgba(45,36,48,0.035)] text-[var(--muted)]" : "border-[var(--line)] bg-white/25 hover:-translate-y-1 hover:border-[var(--ink)] hover:bg-white/55 hover:shadow-[0_18px_50px_rgba(61,45,41,0.10)]"}`}
       type="button"
       onClick={onOpen}

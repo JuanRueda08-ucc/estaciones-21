@@ -257,6 +257,58 @@ a:focus-visible {
   animation: entrance 700ms 650ms var(--ease-out) both;
 }
 
+.screen-enter {
+  animation: screen-in 320ms var(--ease-out) backwards;
+}
+
+.screen-leave {
+  pointer-events: none;
+  animation: screen-out 200ms ease-in forwards;
+}
+
+.screen-hidden {
+  visibility: hidden;
+}
+
+.overlay-enter {
+  animation: fade-in 300ms ease-out backwards;
+}
+
+.overlay-leave {
+  pointer-events: none;
+  animation: fade-out 200ms ease-in forwards;
+}
+
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes screen-out {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
