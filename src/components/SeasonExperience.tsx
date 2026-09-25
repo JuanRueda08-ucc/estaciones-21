@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { AccessGate } from "@/components/AccessGate";
 import { Intro } from "@/components/Intro";
+import { MusicPlayer } from "@/components/MusicPlayer";
 import { FinalLetter } from "@/components/FinalLetter";
 import { SeasonCard } from "@/components/SeasonCard";
 import { SpringReveal } from "@/components/SpringReveal";
@@ -18,7 +19,7 @@ const LEAVE_MS = 200;
 type ChangeOptions = { focusId?: string; toTop?: boolean };
 
 export function SeasonExperience() {
-  const { unlocked, unlock, started, openedCount, selectedStation, startExperience, openStation, clearSelection, resetExperience } = useGiftProgress();
+  const { unlocked, unlock, music, chooseMusic, started, openedCount, selectedStation, startExperience, openStation, clearSelection, resetExperience } = useGiftProgress();
 
   const [gateOpen, setGateOpen] = useState(false);
   const [leaving, setLeaving] = useState(false);
@@ -26,8 +27,10 @@ export function SeasonExperience() {
   const busy = useRef(false);
   const timer = useRef<number | undefined>(undefined);
   const pendingFocus = useRef<string | undefined>(undefined);
-  const showJourney = started && unlocked;
-  const screen = showJourney ? "journey" : gateOpen ? "gate" : "intro";
+  const gatePassed = started && unlocked;
+  const showJourney = gatePassed && music !== null;
+  const screen = showJourney ? "journey" : gatePassed ? "music" : gateOpen ? "gate" : "intro";
+  const afterGateFocus = music === null ? "music-title" : "journey-title";
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
@@ -68,7 +71,7 @@ export function SeasonExperience() {
   }, [change, clearSelection, selectedKey]);
 
   function handleStart() {
-    if (unlocked) change(startExperience, { focusId: "journey-title", toTop: true });
+    if (unlocked) change(startExperience, { focusId: afterGateFocus, toTop: true });
     else change(() => setGateOpen(true), { focusId: "gate-title", toTop: true });
   }
 
@@ -79,8 +82,12 @@ export function SeasonExperience() {
         setGateOpen(false);
         startExperience();
       },
-      { focusId: "journey-title", toTop: true },
+      { focusId: afterGateFocus, toTop: true },
     );
+  }
+
+  function handleMusic(choice: "on" | "off") {
+    change(() => chooseMusic(choice), { focusId: "journey-title", toTop: true });
   }
 
   const screenLeaving = leaving && !selectedStation;
@@ -91,6 +98,17 @@ export function SeasonExperience() {
     <main className="paper-grain overflow-x-hidden">
       {screen === "intro" ? <div key={`intro-${enterCount}`} className={gateLeaving} inert={screenLeaving}><Intro onStart={handleStart} /></div> : null}
       {screen === "gate" ? <div key={`gate-${enterCount}`} className={gateLeaving} inert={screenLeaving}><AccessGate onBack={() => change(() => setGateOpen(false), { focusId: "cover-title", toTop: true })} onSuccess={handleAccess} /></div> : null}
+
+      {music === "on" || screen === "music" ? (
+        <MusicPlayer
+          mode={screen === "music" ? "picker" : "dock"}
+          showToggle={showJourney}
+          entering={enterCount > 0}
+          leaving={leaving}
+          onContinue={() => handleMusic("on")}
+          onSkip={() => handleMusic("off")}
+        />
+      ) : null}
 
       {showJourney ? (
         <div key={`journey-${enterCount}`} className={journeyClass} inert={screenLeaving}>
@@ -153,7 +171,7 @@ export function SeasonExperience() {
         </div>
       ) : null}
 
-      <footer className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-5 pb-8 pt-2 text-[0.62rem] font-bold uppercase tracking-[0.15em] text-[var(--muted)] sm:px-8 lg:px-14">
+      <footer className={`mx-auto flex w-full max-w-[1180px] items-center justify-between px-5 ${music === "on" ? "pb-24" : "pb-8"} pt-2 text-[0.62rem] font-bold uppercase tracking-[0.15em] text-[var(--muted)] sm:px-8 lg:px-14`}>
         <span>una carta interactiva</span>
         <span>hecha para abrirse despacio</span>
       </footer>
