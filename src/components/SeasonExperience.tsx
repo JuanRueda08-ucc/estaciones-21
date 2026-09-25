@@ -13,6 +13,7 @@ import { AutumnReveal } from "@/components/AutumnReveal";
 import { WinterReveal } from "@/components/WinterReveal";
 import { stations } from "@/data/seasons";
 import { useGiftProgress } from "@/hooks/useGiftProgress";
+import { useSpotifyPlayback } from "@/hooks/useSpotifyPlayback";
 
 const LEAVE_MS = 200;
 
@@ -21,6 +22,7 @@ type ChangeOptions = { focusId?: string; toTop?: boolean };
 export function SeasonExperience() {
   const { unlocked, unlock, music, chooseMusic, started, openedCount, selectedStation, startExperience, openStation, clearSelection, resetExperience } = useGiftProgress();
 
+  const spotify = useSpotifyPlayback();
   const [gateOpen, setGateOpen] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const [enterCount, setEnterCount] = useState(0);
@@ -101,6 +103,7 @@ export function SeasonExperience() {
 
       {music === "on" || screen === "music" ? (
         <MusicPlayer
+          spotify={spotify}
           mode={screen === "music" ? "picker" : "dock"}
           showToggle={showJourney}
           entering={enterCount > 0}

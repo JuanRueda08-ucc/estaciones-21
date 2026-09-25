@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Music2, X } from "lucide-react";
+import { SpotifyControls } from "@/components/SpotifyControls";
 import { PLAYLIST_EMBED_URL, PLAYLIST_URL } from "@/data/music";
+import type { SpotifyPlayback } from "@/hooks/useSpotifyPlayback";
 
 const LOAD_TIMEOUT_MS = 12000;
 
 type MusicPlayerProps = {
+  spotify: SpotifyPlayback;
   mode: "picker" | "dock";
   showToggle: boolean;
   entering: boolean;
@@ -17,7 +20,7 @@ type MusicPlayerProps = {
 
 // One Spotify Embed for the whole experience. The iframe lives in the same DOM node whether the player is the
 // full-screen picker, an open dock panel or a collapsed (off-screen) dock panel, so it is never reloaded.
-export function MusicPlayer({ mode, showToggle, entering, leaving, onContinue, onSkip }: MusicPlayerProps) {
+export function MusicPlayer({ spotify, mode, showToggle, entering, leaving, onContinue, onSkip }: MusicPlayerProps) {
   const picker = mode === "picker";
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<"loading" | "loaded" | "failed">("loading");
@@ -88,7 +91,11 @@ export function MusicPlayer({ mode, showToggle, entering, leaving, onContinue, o
             </div>
           )}
 
-          <div className={picker ? "-mx-3 mt-6 sm:mx-0" : ""}>
+          <div className={picker ? "mt-6" : ""}>
+            <SpotifyControls spotify={spotify} />
+          </div>
+
+          <div className={picker ? "-mx-3 sm:mx-0" : ""}>
             <iframe
               className="block w-full rounded-[12px]"
               style={{ height: 352, border: 0 }}
